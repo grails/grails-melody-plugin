@@ -1,7 +1,7 @@
 grails-melody-plugin
 ====================
 
-[JavaMelody](https://github.com/javamelody/javamelody/wiki) monitoring [plugin](http://plugins.grails.org/plugin/sergiomichels/grails-melody-plugin) for Grails 3, to monitor application performance.
+[JavaMelody](https://github.com/javamelody/javamelody/wiki) monitoring plugin for Grails 5, to monitor application performance.
 
 <a href='Screenshots#charts'><img src='https://github.com/javamelody/javamelody/wiki/resources/screenshots/graphs.png' alt='Screenshots' width='50%' title='Screenshots' /></a>
 
@@ -9,18 +9,18 @@ _The goal of JavaMelody is to monitor applications in QA and production environm
 
 ### Installation ###
 
-To install the plugin, just add a dependency as given at the top of [this page](http://plugins.grails.org/plugin/sergiomichels/grails-melody-plugin) (but runtime is enough instead of compile). For example:
+To install the plugin, add the following dependency:
 ```yaml
 dependencies {
-    runtime 'org.grails.plugins:grails-melody-plugin:1.xx.0'
+    runtimeOnly 'org.grails.plugins:grails-melody-plugin:2.0.0'
 }
 ```
 
 Then you will be able to monitor the application at ```http://localhost:8080/<YourContext>/monitoring```.
 
-[![Download](https://api.bintray.com/packages/sergiomichels/plugins/grails-melody-plugin/images/download.svg) ](https://bintray.com/sergiomichels/plugins/grails-melody-plugin/_latestVersion)
+[![Download Plugin](...) ](...)
 
-[Release Notes](https://github.com/javamelody/javamelody/wiki/ReleaseNotes) 
+[JavaMelody Release Notes](https://github.com/javamelody/javamelody/wiki/ReleaseNotes) 
 
 ### More configuration ###
 
@@ -56,14 +56,25 @@ javamelody:
 
 Other parameters such as storage-directory, url-exclude-pattern, log, monitoring-path, authorized-users or allowed-addr-pattern can also be configured.
 
-You can also add [rules for the spring security plugin](https://grails-plugins.github.io/grails-spring-security-core/v3/index.html#requestMappings), if installed:
-```yaml
-grails.plugin.springsecurity.controllerAnnotations.staticRules = [ [pattern: '/monitoring', access: ['ROLE_ADMIN']] ]
+You can also add [rules for the spring security plugin](https://grails-plugins.github.io/grails-spring-security-core/v3/index.html#requestMappings), if installed. If configuring with `application.groovy`:
+```groovy
+grails.plugin.springsecurity.controllerAnnotations.staticRules = [
+  [pattern: '/monitoring', access: ['ROLE_ADMIN']]
+]
 ```
-or add an authorized-users parameter:
+If configuring with `application.yml`:
+```yaml
+grails:
+  plugin:
+    springsecurity:
+      controllerAnnotations:
+        staticRules:
+          - pattern: '/monitoring'
+            access: ['ROLE_ADMIN']
+```
+
+Or you can add an authorized-users parameter:
 ```yaml
 javamelody:
     authorized-users: user1:pwd1, user2:pwd2
 ```
-
-_Please submit github pull requests and github issues._
