@@ -1,63 +1,90 @@
 buildscript {
     repositories {
-        maven { url 'https://repo.grails.org/grails/core' }
+         maven { url "https://plugins.gradle.org/m2/" }
+         maven { url "https://repo.grails.org/grails/core" }
     }
     dependencies {
-        classpath "org.grails:grails-gradle-plugin:$grailsVersion"
+        classpath "org.grails:grails-gradle-plugin:$grailsGradlePluginVersion"
     }
 }
 
+version projectVersion
+group 'org.grails.plugins'
 
-def versionTxt = file("${rootProject.projectDir}/version.txt")
-def versionPlugin = versionTxt.exists() ? versionTxt.text.trim() : '0.1-SNAPSHOT'
-def versionDependency = '1.80.0'
-
-group "org.grails.plugins"
-version = versionPlugin
-
-
+apply plugin: 'java-library'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
-apply plugin: "spring-boot"
-apply plugin: "org.grails.grails-plugin"
-apply plugin: "org.grails.grails-gsp"
-apply plugin: "org.grails.grails-plugin-publish"
+// TODO apply plugin: "spring-boot"
+apply plugin: 'org.grails.grails-plugin'
+// TODO apply plugin: "org.grails.grails-gsp"
+//apply plugin: "org.grails.grails-plugin-publish"
 
-
-sourceCompatibility = targetCompatibility = 1.7
+sourceCompatibility = targetCompatibility = 1.8
 
 repositories {
-    mavenLocal()
     mavenCentral()
     maven { url "https://repo.grails.org/grails/core" }
 }
 
+configurations {
+    developmentOnly
+    runtimeClasspath {
+        extendsFrom developmentOnly
+    }
+}
 
 dependencies {
+    developmentOnly("org.springframework.boot:spring-boot-devtools")
+    compileOnly "io.micronaut:micronaut-inject-groovy"
+    console "org.grails:grails-console"
+    implementation "org.springframework.boot:spring-boot-starter-logging"
+    implementation "org.springframework.boot:spring-boot-starter-validation"
+    implementation "org.springframework.boot:spring-boot-autoconfigure"
+    implementation "org.grails:grails-core"
+    implementation "org.springframework.boot:spring-boot-starter-actuator"
+    implementation "org.springframework.boot:spring-boot-starter-tomcat"
+    implementation "org.grails:grails-web-boot"
+    implementation "org.grails:grails-logging"
+    implementation "org.grails:grails-plugin-rest"
+    implementation "org.grails:grails-plugin-databinding"
+    implementation "org.grails:grails-plugin-i18n"
+    implementation "org.grails:grails-plugin-services"
+    implementation "org.grails:grails-plugin-url-mappings"
+    implementation "org.grails:grails-plugin-interceptors"
+    implementation "org.grails.plugins:cache"
+    implementation "org.grails.plugins:async"
+    implementation "org.grails.plugins:scaffolding"
+    implementation "org.grails.plugins:gsp"
+    profile "org.grails.profiles:web-plugin"
+ //   runtimeOnly "com.bertramlabs.plugins:asset-pipeline-grails:3.3.4"
+    testImplementation "io.micronaut:micronaut-inject-groovy"
+    testImplementation "org.grails:grails-gorm-testing-support"
+    testImplementation "org.grails:grails-web-testing-support"
+    testImplementation "org.mockito:mockito-core"
 
-    provided "javax.servlet:javax.servlet-api:$javaxServletApiVersion"
-    provided 'org.grails:grails-dependencies'
-    provided 'org.grails:grails-web-boot'
-    provided 'org.springframework.boot:spring-boot-starter-logging'
-    testCompile "org.grails:grails-gorm-testing-support:$grailsTestingSupportVersion"
-    testCompile "org.grails:grails-web-testing-support:$grailsTestingSupportVersion"
+    compileOnly "jakarta.servlet:jakarta.servlet-api:$jakartaServletApiVersion"
 
-    compile "net.bull.javamelody:javamelody-core:${versionDependency}"
-
+    api "net.bull.javamelody:javamelody-core:${javaMelodyVersion}"
 }
 
-grailsPublish {
-    user = System.getenv("BINTRAY_USER")
-    key = System.getenv("BINTRAY_KEY")
-    githubSlug = 'javamelody/grails-melody-plugin'
-    license {
-        name = 'Apache-2.0'
-    }
-    title = "JavaMelody Grails Plugin"
-    desc = "Integrate JavaMelody monitoring into Grails application."
-    developers = [
-            liuchao: 'Liu Chao',
-            emericvernat: 'Emeric Vernat',
-            sergiomichels: 'Sérgio Michels'
-    ]
+tasks.withType(Test) {
+    useJUnitPlatform()
 }
+
+
+// TODO
+// grailsPublish {
+//     user = System.getenv("BINTRAY_USER")
+//     key = System.getenv("BINTRAY_KEY")
+//     githubSlug = 'javamelody/grails-melody-plugin'
+//     license {
+//         name = 'Apache-2.0'
+//     }
+//     title = "JavaMelody Grails Plugin"
+//     desc = "Integrate JavaMelody monitoring into Grails application."
+//     developers = [
+//             liuchao: 'Liu Chao',
+//             emericvernat: 'Emeric Vernat',
+//             sergiomichels: 'Sérgio Michels'
+//     ]
+//}
