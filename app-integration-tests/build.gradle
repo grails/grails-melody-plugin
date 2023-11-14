@@ -72,6 +72,10 @@ dependencies {
 	implementation project(':grails-melody-plugin')
 }
 
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
+}
+
 bootRun {
     jvmArgs('-Dspring.output.ansi.enabled=always')
 // TODO   addResources = true

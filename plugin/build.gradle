@@ -67,7 +67,7 @@ dependencies {
     api "net.bull.javamelody:javamelody-core:${javaMelodyVersion}"
 }
 
-tasks.withType(Test) {
+tasks.withType(Test).configureEach {
     useJUnitPlatform()
 }
 
