@@ -20,7 +20,7 @@ class GrailsMelodyPluginGrailsPlugin extends Plugin {
     private static final Logger LOG = LoggerFactory.getLogger(GrailsMelodyPluginGrailsPlugin.class)
 
     // the version or versions of Grails the plugin is designed for
-    def grailsVersion = '3.2 > *'
+    def grailsVersion = '5.3.3 > *'
     def loadAfter = ['spring-security-core', 'acegi', 'shiro', 'quartz', 'hibernate']
     // resources that are excluded from plugin packaging
     def pluginExcludes = [
@@ -30,7 +30,7 @@ class GrailsMelodyPluginGrailsPlugin extends Plugin {
 
     def title = 'JavaMelody Grails Plugin'
     def description = 'Integrate JavaMelody monitoring into Grails application.'
-    def documentation = 'http://grails.org/plugin/grails-melody'
+    def documentation = 'https://github.com/javamelody/grails-melody-plugin'
 
     def license = 'ASL'
     def organization = [name: 'JavaMelody', url: 'https://github.com/javamelody/javamelody/wiki']
@@ -38,7 +38,8 @@ class GrailsMelodyPluginGrailsPlugin extends Plugin {
     def developers = [
             [name: 'Liu Chao', email: 'liuchao@goal98.com'],
             [name: 'Emeric Vernat', email: 'evernat@free.fr'],
-            [name: 'Sérgio Michels', email: 'sergiomichelss@gmail.com']
+            [name: 'Sérgio Michels', email: 'sergiomichelss@gmail.com'],
+            [name: 'Matthew Moss', email: 'mossm@unityfoundation.io'],
     ]
 
     def issueManagement = [system: 'GitHub', url: 'https://github.com/javamelody/grails-melody-plugin/issues']
@@ -49,7 +50,7 @@ class GrailsMelodyPluginGrailsPlugin extends Plugin {
     }
 
     void doWithApplicationContext() {
-        //Need to wrap the datasources here, because BeanPostProcessor didn't worked.
+        //Need to wrap the DataSources here, because BeanPostProcessor didn't worked.
         def beans = applicationContext.getBeansOfType(DataSource)
 
         // Attempt lazy DataSources for Grails 3.2 and before
@@ -79,9 +80,7 @@ class GrailsMelodyPluginGrailsPlugin extends Plugin {
         }
     }
 
-    Closure doWithSpring() {
-        { ->
-            melodyConfig(MelodyConfig)
-        }
-    }
+    Closure doWithSpring() {{ ->
+        melodyConfig(MelodyConfig)
+    }}
 }
