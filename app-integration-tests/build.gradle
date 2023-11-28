@@ -67,7 +67,7 @@ dependencies {
     testRuntimeOnly "org.seleniumhq.selenium:selenium-htmlunit-driver:2.47.1"
     // TODO testRuntimeOnly "net.sourceforge.htmlunit:htmlunit:2.18"
 
-    runtimeOnly "jakarta.servlet:jakarta.servlet-api:$jakartaServletApiVersion"
+    runtimeOnly "javax.servlet:javax.servlet-api:$javaxServletApiVersion"
 
 	implementation project(':grails-melody-plugin')
 }

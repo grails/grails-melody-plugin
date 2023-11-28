@@ -56,13 +56,12 @@ dependencies {
     implementation "org.grails.plugins:scaffolding"
     implementation "org.grails.plugins:gsp"
     profile "org.grails.profiles:web-plugin"
- //   runtimeOnly "com.bertramlabs.plugins:asset-pipeline-grails:3.3.4"
     testImplementation "io.micronaut:micronaut-inject-groovy"
     testImplementation "org.grails:grails-gorm-testing-support"
     testImplementation "org.grails:grails-web-testing-support"
     testImplementation "org.mockito:mockito-core"
 
-    compileOnly "jakarta.servlet:jakarta.servlet-api:$jakartaServletApiVersion"
+    compileOnly "javax.servlet:javax.servlet-api:$javaxServletApiVersion"
 
     api "net.bull.javamelody:javamelody-core:${javaMelodyVersion}"
 }
