@@ -5,6 +5,7 @@ import groovy.util.logging.Slf4j
 import net.bull.javamelody.MonitoringProxy
 import net.bull.javamelody.Parameter
 import net.bull.javamelody.internal.common.Parameters
+import org.codehaus.groovy.runtime.InvokerHelper
 
 /**
  * Enhance Grails artefacts, intercepting method calls for monitoring purpose.
@@ -13,9 +14,9 @@ import net.bull.javamelody.internal.common.Parameters
 class MelodyInterceptorEnhancer {
 
     void enhance(GrailsApplication grailsApplication) {
-        //For each service class in Grails, the plugin use groovy meta programming (invokeMethod)
-        //to 'intercept' method call and collect infomation for monitoring purpose.
-        //The code below mimics 'MonitoringSpringInterceptor.invoke()'
+        // For each service class in Grails, the plugin uses groovy meta programming (invokeMethod)
+        // to 'intercept' method calls and collect information for monitoring purposes.
+        // The code below mimics 'MonitoringSpringInterceptor.invoke()'
         def SPRING_COUNTER = MonitoringProxy.getSpringCounter()
         final boolean DISABLED = GrailsMelodyUtil.getGrailsMelodyConfig(grailsApplication)?.javamelody?.disabled || Parameter.DISABLED.getValueAsBoolean()
 
@@ -35,9 +36,10 @@ class MelodyInterceptorEnhancer {
             log.debug("Enhancing ${serviceClass}")
 
             serviceClass.metaClass.invokeMethod = { String name, args ->
-                def metaMethod = delegate.metaClass.getMetaMethod(name, args)
+                def delegateMetaClass = InvokerHelper.getMetaClass(delegate) //delegate.getMetaClass()
+                def metaMethod = delegateMetaClass.getMetaMethod(name, args)
                 if (!metaMethod) {
-                    List methods = delegate.metaClass.getMethods()
+                    List methods = delegateMetaClass.getMethods()
                     boolean found = false
                     for (MetaMethod method in methods) {
                         if (method.getName() == name) {
@@ -57,7 +59,7 @@ class MelodyInterceptorEnhancer {
                             }
                         }
                     }
-                    if (!found && delegate.metaClass.hasProperty(delegate, name)) {
+                    if (!found && delegateMetaClass.hasProperty(delegate, name)) {
                         def property = delegate."${name}"
                         if (property instanceof Closure) {
                             found = true
@@ -68,7 +70,7 @@ class MelodyInterceptorEnhancer {
                         }
                     }
                     if (!found) {
-                        return delegate.metaClass.invokeMissingMethod(delegate, name, args)
+                        return delegateMetaClass.invokeMissingMethod(delegate, name, args)
                         /*throw new MissingMethodException(name, delegate.class, args)*/
                     }
                 }
